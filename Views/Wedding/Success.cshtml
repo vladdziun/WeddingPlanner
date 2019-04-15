@@ -1,0 +1,37 @@
+@using System.Collections.Generic
+@using LoginReg.Models
+@model List<Wedding>
+
+<a href ="/logout">Logout</a>
+<a href ="/add/wedding">Add Wedding</a>
+    <table style="width:50%">
+    <tr>
+    <th>Wedding</th>
+    <th>Date</th> 
+    <th>Guests</th>
+    <th>Action</th>
+    </tr>
+
+    @foreach(var w in @Model)
+    {
+  <tr>
+    <td><a href = "/view/@w.WeddingId">@w.WedderOne & @w.WedderTwo</a></td>
+    <td>@w.Date</td>
+    <td>@w.Guests.Count</td>
+    @if(@w.Guests.Any(g => g.UserId == @ViewBag.UserId))
+    {
+    <td><a href ="/remove/@ViewBag.UserId/@w.WeddingId">Un-RSPV</a></td>
+    }else if(@w.Guests.Count ==0)
+    {
+        <td><a href ="/add/@ViewBag.UserId/@w.WeddingId">RSPV</a></td>
+    } 
+    else
+    {
+    <td><a href ="/add/@ViewBag.UserId/@w.WeddingId">RSPV</a></td>
+    }
+  </tr>
+
+    }
+  
+
+  </table>

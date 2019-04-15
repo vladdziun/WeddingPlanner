@@ -1,0 +1,13 @@
+@using System.Collections.Generic
+@using LoginReg.Models
+@model Wedding
+
+<a href ="/logout">Logout</a>
+<a href ="/success">All Weddings</a>
+<h1>@Model.WedderOne and @Model.WedderTwo Wedding</h1>
+<h2>Date: @Model.Date</h2>
+
+@foreach (var u in @Model.Guests)
+{
+    <p>@u.User.FirstName @u.User.LastName</p>
+}
