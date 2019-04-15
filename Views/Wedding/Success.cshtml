@@ -18,13 +18,17 @@
     <td><a href = "/view/@w.WeddingId">@w.WedderOne & @w.WedderTwo</a></td>
     <td>@w.Date</td>
     <td>@w.Guests.Count</td>
-    @if(@w.Guests.Any(g => g.UserId == @ViewBag.UserId))
+    @if(@w.UserId == @ViewBag.UserId)
+    {
+        <td><a href ="/delete/@w.WeddingId">Delete</a></td>
+    } 
+    else if(@w.Guests.Any(g => g.UserId == @ViewBag.UserId))
     {
     <td><a href ="/remove/@ViewBag.UserId/@w.WeddingId">Un-RSPV</a></td>
     }else if(@w.Guests.Count ==0)
     {
         <td><a href ="/add/@ViewBag.UserId/@w.WeddingId">RSPV</a></td>
-    } 
+    }
     else
     {
     <td><a href ="/add/@ViewBag.UserId/@w.WeddingId">RSPV</a></td>

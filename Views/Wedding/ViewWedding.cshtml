@@ -6,8 +6,10 @@
 <a href ="/success">All Weddings</a>
 <h1>@Model.WedderOne and @Model.WedderTwo Wedding</h1>
 <h2>Date: @Model.Date</h2>
-
+@if (@Model.Guests != null)
+{
 @foreach (var u in @Model.Guests)
 {
     <p>@u.User.FirstName @u.User.LastName</p>
+}
 }

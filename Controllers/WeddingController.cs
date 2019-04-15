@@ -25,9 +25,9 @@ namespace LoginReg.Controllers
         public IActionResult Success()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
-            if(userId == null)
-                return RedirectToAction("Index","Home");
-            List<Wedding>AllWeddings=dbContext.Weddings
+            if (userId == null)
+                return RedirectToAction("Index", "Home");
+            List<Wedding> AllWeddings = dbContext.Weddings
                 .Include(w => w.Guests)
                 .ThenInclude(a => a.User)
                 .ToList();
@@ -42,17 +42,19 @@ namespace LoginReg.Controllers
         [HttpGet]
         public IActionResult AddWedding()
         {
-             return View("AddWedding");
+            return View("AddWedding");
         }
 
-        
+
         [Route("/create/wedding")]
         [HttpPost]
         public IActionResult CreateWedding(Wedding newWedding)
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            newWedding.UserId = (int)userId;
             dbContext.Add(newWedding);
             dbContext.SaveChanges();
-            return RedirectToAction("Success");
+            return RedirectToAction("ViewWedding",new {weddingId = newWedding.WeddingId});
         }
 
         [Route("/add/{userId}/{weddingId}")]
@@ -63,8 +65,8 @@ namespace LoginReg.Controllers
             User oneUser = dbContext.Users.FirstOrDefault(u => u.UserId == userId);
             Association newAssociation = new Association()
             {
-               WeddingId = oneWedding.WeddingId,
-               UserId = oneUser.UserId 
+                WeddingId = oneWedding.WeddingId,
+                UserId = oneUser.UserId
             };
             dbContext.Associations.Add(newAssociation);
             dbContext.SaveChanges();
@@ -82,18 +84,28 @@ namespace LoginReg.Controllers
             dbContext.SaveChanges();
             return RedirectToAction("Success");
         }
+
         [Route("/view/{weddingId}")]
         [HttpGet]
         public IActionResult ViewWedding(int weddingId)
-        { 
+        {
             List<Association> users = dbContext.Associations
             .Include(u => u.User)
              .Where(u => u.WeddingId == weddingId)
-             .ToList(); 
+             .ToList();
 
 
             Wedding oneWedding = dbContext.Weddings.FirstOrDefault(w => w.WeddingId == weddingId);
             return View(oneWedding);
+        }
+        [Route("/delete/{weddingId}")]
+        [HttpGet]
+        public IActionResult DeleteWedding(int weddingId)
+        {
+            Wedding oneWedding = dbContext.Weddings.FirstOrDefault(w => w.WeddingId == weddingId);
+            dbContext.Remove(oneWedding);
+            dbContext.SaveChanges();
+            return RedirectToAction("Success");
         }
     }
 }
