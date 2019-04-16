@@ -15,6 +15,7 @@ namespace LoginReg.Models
         [Required]
         [MinLength(3, ErrorMessage="Name must be 3 characters or longer!")]
         public string WedderTwo { get; set; }
+        [DateInTheFuture]
         public DateTime Date { get; set; }
         [Required]
         [MinLength(3, ErrorMessage="Address must be 3 characters or longer!")]

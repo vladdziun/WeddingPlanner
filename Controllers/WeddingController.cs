@@ -42,6 +42,9 @@ namespace LoginReg.Controllers
         [HttpGet]
         public IActionResult AddWedding()
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Index", "Home");
             return View("AddWedding");
         }
 
@@ -50,11 +53,16 @@ namespace LoginReg.Controllers
         [HttpPost]
         public IActionResult CreateWedding(Wedding newWedding)
         {
-            int? userId = HttpContext.Session.GetInt32("UserId");
-            newWedding.UserId = (int)userId;
-            dbContext.Add(newWedding);
-            dbContext.SaveChanges();
-            return RedirectToAction("ViewWedding",new {weddingId = newWedding.WeddingId});
+            if (ModelState.IsValid)
+            {
+                int? userId = HttpContext.Session.GetInt32("UserId");
+                newWedding.UserId = (int)userId;
+                dbContext.Add(newWedding);
+                dbContext.SaveChanges();
+                return RedirectToAction("ViewWedding", new { weddingId = newWedding.WeddingId });
+            }
+            else
+                return View("AddWedding");
         }
 
         [Route("/add/{userId}/{weddingId}")]
@@ -89,6 +97,9 @@ namespace LoginReg.Controllers
         [HttpGet]
         public IActionResult ViewWedding(int weddingId)
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Index", "Home");
             List<Association> users = dbContext.Associations
             .Include(u => u.User)
              .Where(u => u.WeddingId == weddingId)
